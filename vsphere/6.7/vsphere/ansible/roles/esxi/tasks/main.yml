@@ -1,0 +1,35 @@
+---
+############################################
+
+# Title: The ESXi host SSH daemon must be configured with the Department of Defense (DoD) login banner.
+
+- name: ESXI-65-000009 - Update sshd_config banner
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^Banner.*$'
+    line: Banner {{ var_sshd_banner }}
+    firstmatch: yes
+  tags:
+  - V-93965
+  - ESXI-65-000009
+  notify:
+  - restart sshd
+  when:
+  - run_sshd_banner | bool
+
+  - name: ESXI-65-000009 - Update/Create /etc/issue file
+  template:
+    src: issue.j2
+    dest: /etc/issue
+    owner: root
+    group: root
+    mode: '0644'
+    force: yes
+  tags:
+  - V-93965
+  - ESXI-65-000009
+  notify:
+    - restart sshd
+  when:
+  - run_sshd_banner | bool

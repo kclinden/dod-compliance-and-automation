@@ -1,0 +1,5 @@
+---
+# vars file for esxi
+
+# sshd variables
+var_sshd_banner: /etc/issue
